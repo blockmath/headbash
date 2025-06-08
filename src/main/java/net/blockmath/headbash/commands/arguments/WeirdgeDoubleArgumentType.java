@@ -1,20 +1,15 @@
 package net.blockmath.headbash.commands.arguments;
 
-import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.blockmath.headbash.HeadBashCommands;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraft.commands.synchronization.ArgumentUtils;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +20,7 @@ public class WeirdgeDoubleArgumentType implements ArgumentType<Double> {
 
     public static final DeferredHolder<ArgumentTypeInfo<?,?>,?> HOLDER =
             REGISTER.register("weirdgedouble", () -> {
+                ArgumentTypeInfos.registerByClass(WeirdgeDoubleArgumentType.class, new WeirdgeDoubleArgumentInfo());
                 return new WeirdgeDoubleArgumentInfo();
             });
 
