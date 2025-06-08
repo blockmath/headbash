@@ -18,10 +18,10 @@ import java.util.Collection;
 public class WeirdgeDoubleArgumentType implements ArgumentType<Double> {
     public static final DeferredRegister<ArgumentTypeInfo<?,?>> REGISTER = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, HeadBashCommands.MODID);
 
-    public static final DeferredHolder<ArgumentTypeInfo<?,?>,WeirdgeDoubleArgumentInfo> HOLDER =
+    public static final DeferredHolder<ArgumentTypeInfo<?,?>,?> HOLDER =
             REGISTER.register("weirdgedouble", () -> {
-                ArgumentTypeInfos.registerByClass(WeirdgeDoubleArgumentType.class, new WeirdgeDoubleArgumentInfo());
-                return new WeirdgeDoubleArgumentInfo();
+                ArgumentTypeInfos.registerByClass(WeirdgeDoubleArgumentType.class, new net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentInfo());
+                return new net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentInfo();
             });
 
 
