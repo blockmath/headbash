@@ -1,6 +1,9 @@
 package net.blockmath.headbash;
 
+
+import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentInfo;
 import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.slf4j.Logger;
 
@@ -53,6 +56,7 @@ public class HeadBashCommands
         modEventBus.addListener(this::commonSetup);
 
         WeirdgeDoubleArgumentType.REGISTER.register(modEventBus);
+        ArgumentTypeInfos.registerByClass(WeirdgeDoubleArgumentType.class, new WeirdgeDoubleArgumentInfo());
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (HeadBashCommands) to respond directly to events.
