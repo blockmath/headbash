@@ -1,5 +1,6 @@
 package net.blockmath.headbash;
 
+import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.slf4j.Logger;
 
@@ -50,6 +51,8 @@ public class HeadBashCommands
     {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+
+        WeirdgeDoubleArgumentType.REGISTER.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (HeadBashCommands) to respond directly to events.
