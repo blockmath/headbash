@@ -18,7 +18,7 @@ import java.util.Collection;
 public class WeirdgeDoubleArgumentType implements ArgumentType<Double> {
     public static final DeferredRegister<ArgumentTypeInfo<?,?>> REGISTER = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, HeadBashCommands.MODID);
 
-    public static final DeferredHolder<ArgumentTypeInfo<?,?>,?> HOLDER =
+    public static final DeferredHolder<ArgumentTypeInfo<?,?>,WeirdgeDoubleArgumentInfo> HOLDER =
             REGISTER.register("weirdgedouble", () -> {
                 ArgumentTypeInfos.registerByClass(WeirdgeDoubleArgumentType.class, new WeirdgeDoubleArgumentInfo());
                 return new WeirdgeDoubleArgumentInfo();
