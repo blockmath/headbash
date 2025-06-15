@@ -2,7 +2,6 @@ package net.blockmath.headbash.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -148,8 +147,8 @@ public class BashCommand {
                                                                 Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
                                                                         .fork(literalCommandNode, context -> bash_if(
                                                                                 context.getSource(),
-                                                                                DoubleArgumentType.getDouble(context, "val_a"),
-                                                                                DoubleArgumentType.getDouble(context, "val_b"),
+                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
                                                                                 OPERATOR_EQ,
                                                                                 false
                                                                         ))
@@ -219,99 +218,99 @@ public class BashCommand {
                         )
                         .then(
                                 Commands.literal("let").then(
-                                        Commands.argument("var", StringArgumentType.string())
-                                                .then(
-                                                        Commands.literal("add").then(
-                                                                Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
-                                                                        Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
-                                                                                .fork(literalCommandNode, context -> bash_let(
-                                                                                        context.getSource(),
-                                                                                        StringArgumentType.getString(context, "var"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
-                                                                                        OPERATOR_ADD,
-                                                                                        context.getInput()
-                                                                                ))
+                                        Commands.argument("var", StringArgumentType.string()).then(
+                                                Commands.literal("eq")
+                                                        .then(
+                                                                Commands.literal("add").then(
+                                                                        Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
+                                                                                Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
+                                                                                        .fork(literalCommandNode, context -> bash_let(
+                                                                                                context.getSource(),
+                                                                                                StringArgumentType.getString(context, "var"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
+                                                                                                OPERATOR_ADD,
+                                                                                                context.getInput()
+                                                                                        ))
+                                                                        )
                                                                 )
                                                         )
-                                                )
-                                                .then(
-                                                        Commands.literal("sub").then(
-                                                                Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
-                                                                        Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
-                                                                                .fork(literalCommandNode, context -> bash_let(
-                                                                                        context.getSource(),
-                                                                                        StringArgumentType.getString(context, "var"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
-                                                                                        OPERATOR_SUB,
-                                                                                        context.getInput()
-                                                                                ))
+                                                        .then(
+                                                                Commands.literal("sub").then(
+                                                                        Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
+                                                                                Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
+                                                                                        .fork(literalCommandNode, context -> bash_let(
+                                                                                                context.getSource(),
+                                                                                                StringArgumentType.getString(context, "var"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
+                                                                                                OPERATOR_SUB,
+                                                                                                context.getInput()
+                                                                                        ))
+                                                                        )
                                                                 )
                                                         )
-                                                )
-                                                .then(
-                                                        Commands.literal("mul").then(
-                                                                Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
-                                                                        Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
-                                                                                .fork(literalCommandNode, context -> bash_let(
-                                                                                        context.getSource(),
-                                                                                        StringArgumentType.getString(context, "var"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
-                                                                                        OPERATOR_MUL,
-                                                                                        context.getInput()
-                                                                                ))
+                                                        .then(
+                                                                Commands.literal("mul").then(
+                                                                        Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
+                                                                                Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
+                                                                                        .fork(literalCommandNode, context -> bash_let(
+                                                                                                context.getSource(),
+                                                                                                StringArgumentType.getString(context, "var"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
+                                                                                                OPERATOR_MUL,
+                                                                                                context.getInput()
+                                                                                        ))
+                                                                        )
                                                                 )
                                                         )
-                                                )
-                                                .then(
-                                                        Commands.literal("div").then(
-                                                                Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
-                                                                        Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
-                                                                                .fork(literalCommandNode, context -> bash_let(
-                                                                                        context.getSource(),
-                                                                                        StringArgumentType.getString(context, "var"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
-                                                                                        OPERATOR_DIV,
-                                                                                        context.getInput()
-                                                                                ))
+                                                        .then(
+                                                                Commands.literal("div").then(
+                                                                        Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
+                                                                                Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
+                                                                                        .fork(literalCommandNode, context -> bash_let(
+                                                                                                context.getSource(),
+                                                                                                StringArgumentType.getString(context, "var"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
+                                                                                                OPERATOR_DIV,
+                                                                                                context.getInput()
+                                                                                        ))
+                                                                        )
                                                                 )
                                                         )
-                                                )
-                                                .then(
-                                                        Commands.literal("pow").then(
-                                                                Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
-                                                                        Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
-                                                                                .fork(literalCommandNode, context -> bash_let(
-                                                                                        context.getSource(),
-                                                                                        StringArgumentType.getString(context, "var"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
-                                                                                        OPERATOR_POW,
-                                                                                        context.getInput()
-                                                                                ))
+                                                        .then(
+                                                                Commands.literal("pow").then(
+                                                                        Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
+                                                                                Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
+                                                                                        .fork(literalCommandNode, context -> bash_let(
+                                                                                                context.getSource(),
+                                                                                                StringArgumentType.getString(context, "var"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
+                                                                                                OPERATOR_POW,
+                                                                                                context.getInput()
+                                                                                        ))
+                                                                        )
                                                                 )
                                                         )
-                                                )
-                                                .then(
-                                                        Commands.literal("log").then(
-                                                                Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
-                                                                        Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
-                                                                                .fork(literalCommandNode, context -> bash_let(
-                                                                                        context.getSource(),
-                                                                                        StringArgumentType.getString(context, "var"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
-                                                                                        WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
-                                                                                        OPERATOR_LOG,
-                                                                                        context.getInput()
-                                                                                ))
+                                                        .then(
+                                                                Commands.literal("log").then(
+                                                                        Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).then(
+                                                                                Commands.argument("val_b", WeirdgeDoubleArgumentType.doubleArg())
+                                                                                        .fork(literalCommandNode, context -> bash_let(
+                                                                                                context.getSource(),
+                                                                                                StringArgumentType.getString(context, "var"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
+                                                                                                OPERATOR_LOG,
+                                                                                                context.getInput()
+                                                                                        ))
+                                                                        )
                                                                 )
                                                         )
-                                                )
-                                                .then(
-                                                        Commands.literal("eq").then(
+                                                        .then(
                                                                 Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg())
                                                                         .fork(literalCommandNode, context -> bash_let(
                                                                                 context.getSource(),
@@ -322,7 +321,7 @@ public class BashCommand {
                                                                                 context.getInput()
                                                                         ))
                                                         )
-                                                )
+                                        )
                                 )
                         )
         );
@@ -411,7 +410,7 @@ public class BashCommand {
             default -> throw new IllegalStateException("Unexpected value: " + op);
         };
 
-        __var_set_impl(source, var, result, command, "let", op == OPERATOR_SET ? 4 : 5);
+        __var_set_impl(source, var, result, command, "let", op == OPERATOR_SET ? 5 : 6);
 
         return List.of(new CommandSourceStack[]{});
     }
