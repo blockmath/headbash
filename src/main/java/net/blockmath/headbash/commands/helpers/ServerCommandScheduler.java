@@ -3,7 +3,6 @@ package net.blockmath.headbash.commands.helpers;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import org.jetbrains.annotations.Async;
 
 import java.util.*;
 

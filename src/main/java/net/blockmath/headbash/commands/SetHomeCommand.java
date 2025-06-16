@@ -2,8 +2,6 @@ package net.blockmath.headbash.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.blockmath.headbash.HeadBashCommands;
 import net.blockmath.headbash.commands.helpers.AttachmentTypes;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -23,7 +21,7 @@ public class SetHomeCommand {
         );
     }
 
-    private static int setHome(CommandSourceStack source) throws CommandSyntaxException {
+    private static int setHome(CommandSourceStack source) {
         Entity entity = source.getEntity();
         if (entity instanceof ServerPlayer player) {
             BlockPos playerPos = BlockPos.containing(player.getPosition(0));

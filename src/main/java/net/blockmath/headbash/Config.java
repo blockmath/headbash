@@ -1,17 +1,11 @@
 package net.blockmath.headbash;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import net.blockmath.headbash.commands.BackCommand;
 import net.blockmath.headbash.commands.BashCommand;
 import net.blockmath.headbash.commands.HomeCommand;
 import net.blockmath.headbash.commands.SetHomeCommand;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;

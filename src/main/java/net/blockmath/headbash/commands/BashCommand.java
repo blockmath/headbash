@@ -2,16 +2,12 @@ package net.blockmath.headbash.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
 import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.TimeArgument;
-import net.minecraft.network.chat.Component;
 
 import java.util.*;
 
@@ -39,10 +35,6 @@ public class BashCommand {
                                         /*.redirect(
                                                 dispatcher.getRoot()
                                         )*/
-                        )
-                        .then(
-                                Commands.literal("hello")
-                                        .fork(literalCommandNode, context -> hello(context.getSource()))
                         )
                         .then(
                                 Commands.literal("for").then(
@@ -437,7 +429,7 @@ public class BashCommand {
         return List.of(new CommandSourceStack[]{});
     }
 
-    public static List<CommandSourceStack> bash_if(CommandSourceStack source, double val_a, double val_b, int op, boolean when) throws CommandSyntaxException {
+    public static List<CommandSourceStack> bash_if(CommandSourceStack source, double val_a, double val_b, int op, boolean when) {
         boolean result = switch (op) {
             case OPERATOR_EQ -> val_a == val_b;
             case OPERATOR_NE -> val_a != val_b;
@@ -455,7 +447,7 @@ public class BashCommand {
         }
     }
 
-    public static List<CommandSourceStack> bash_let(CommandSourceStack source, String var, double val_a, double val_b, int op, String command) throws CommandSyntaxException {
+    public static List<CommandSourceStack> bash_let(CommandSourceStack source, String var, double val_a, double val_b, int op, String command) {
         double result = switch (op) {
             case OPERATOR_ADD -> val_a + val_b;
             case OPERATOR_SUB -> val_a - val_b;
@@ -475,7 +467,7 @@ public class BashCommand {
         return List.of(new CommandSourceStack[]{});
     }
 
-    public static List<CommandSourceStack> bash_for(CommandSourceStack source, String var, double start, double stop, double step, String command) throws CommandSyntaxException {
+    public static List<CommandSourceStack> bash_for(CommandSourceStack source, String var, double start, double stop, double step, String command) {
         if (var.equals("_")) {
             ArrayList<CommandSourceStack> list = new ArrayList<>();
 
@@ -490,11 +482,5 @@ public class BashCommand {
             }
             return List.of(new CommandSourceStack[]{});
         }
-    }
-
-    public static List<CommandSourceStack> hello(CommandSourceStack source) throws CommandSyntaxException {
-        source.sendSuccess(() -> Component.literal("Hello, World!"), true);
-
-        return List.of(new CommandSourceStack[]{source});
     }
 }
