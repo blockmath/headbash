@@ -20,8 +20,9 @@ public class WeirdgeDoubleArgumentType implements ArgumentType<Double> {
 
     public static final DeferredHolder<ArgumentTypeInfo<?,?>,ArgumentTypeInfo<WeirdgeDoubleArgumentType, WeirdgeDoubleArgumentInfo.Template>> HOLDER =
             REGISTER.register("weirdgedouble", () -> {
-                ArgumentTypeInfos.registerByClass(WeirdgeDoubleArgumentType.class, new WeirdgeDoubleArgumentInfo());
-                return new WeirdgeDoubleArgumentInfo();
+                WeirdgeDoubleArgumentInfo wo = new WeirdgeDoubleArgumentInfo();
+                ArgumentTypeInfos.registerByClass(WeirdgeDoubleArgumentType.class, wo);
+                return wo;
             });
 
 
@@ -63,7 +64,9 @@ public class WeirdgeDoubleArgumentType implements ArgumentType<Double> {
     public Double parse(final StringReader reader) throws CommandSyntaxException {
         final int start = reader.getCursor();
         if (reader.peek() == '$') {
-            reader.readStringUntil(' ');
+            while (reader.peek() != ' ') {
+                reader.read();
+            }
             return Double.NaN;
         } else {
             final double result = reader.readDouble();

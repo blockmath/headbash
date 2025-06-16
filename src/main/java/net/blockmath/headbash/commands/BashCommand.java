@@ -2,27 +2,32 @@ package net.blockmath.headbash.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
+import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.TimeArgument;
 import net.minecraft.network.chat.Component;
 
 import java.util.*;
 
 
 public class BashCommand {
+    public static int requiredPermissionLevel = Commands.LEVEL_OWNERS;
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> literalCommandNode = dispatcher.register(
                 Commands.literal("bash")
-                        //.requires(commandSourceStack -> commandSourceStack.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(commandSourceStack -> commandSourceStack.hasPermission(requiredPermissionLevel))
         );
 
         dispatcher.register(
                 Commands.literal("bash")
-                        //.requires(commandSourceStack -> commandSourceStack.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(commandSourceStack -> commandSourceStack.hasPermission(requiredPermissionLevel))
                         .then(
                                 Commands.literal("run").then(
                                         Commands.argument("cmd", StringArgumentType.greedyString())
@@ -311,6 +316,18 @@ public class BashCommand {
                                                                 )
                                                         )
                                                         .then(
+                                                                Commands.literal("int").then(
+                                                                        Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg()).fork(literalCommandNode, context -> bash_let(
+                                                                                context.getSource(),
+                                                                                StringArgumentType.getString(context, "var"),
+                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_a"),
+                                                                                WeirdgeDoubleArgumentType.getDouble(context, "val_b"),
+                                                                                OPERATOR_INT,
+                                                                                context.getInput()
+                                                                        ))
+                                                                )
+                                                        )
+                                                        .then(
                                                                 Commands.argument("val_a", WeirdgeDoubleArgumentType.doubleArg())
                                                                         .fork(literalCommandNode, context -> bash_let(
                                                                                 context.getSource(),
@@ -323,6 +340,19 @@ public class BashCommand {
                                                         )
                                         )
                                 )
+                        )
+                        .then(
+                                Commands.literal("delay")
+                                        .then(
+                                                Commands.argument("duration", WeirdgeDoubleArgumentType.doubleArg())
+                                                        .fork(literalCommandNode, context -> bash_delay(
+                                                                context.getSource(),
+                                                                (int)WeirdgeDoubleArgumentType.getDouble(context, "duration"),
+                                                                context.getInput(),
+                                                                "delay",
+                                                                2
+                                                        ))
+                                        )
                         )
         );
     }
@@ -337,24 +367,34 @@ public class BashCommand {
 
     public static final int OPERATOR_SET = 7;
 
-    public static final int OPERATOR_EQ = 8;
-    public static final int OPERATOR_NE = 9;
-    public static final int OPERATOR_GT = 10;
-    public static final int OPERATOR_GE = 11;
-    public static final int OPERATOR_LT = 12;
-    public static final int OPERATOR_LE = 13;
+    public static final int OPERATOR_INT = 8;
 
-    private static void __exec(CommandSourceStack source, String command) {
+    public static final int OPERATOR_EQ = 16;
+    public static final int OPERATOR_NE = 17;
+    public static final int OPERATOR_GT = 18;
+    public static final int OPERATOR_GE = 19;
+    public static final int OPERATOR_LT = 20;
+    public static final int OPERATOR_LE = 21;
+
+    private static void __exec(CommandSourceStack source, String command, int delay) {
+        if (delay == 0) {
+            __exec(source, command);
+        } else {
+            ServerCommandScheduler.get(source.getServer()).schedule(() -> __exec(source, command), delay);
+        }
+    }
+
+    public static void __exec(CommandSourceStack source, String command) {
         source.getServer().getCommands().performCommand(
                 source.getServer().getCommands().getDispatcher().parse(
                         command,
                         source
                 ),
-                command.split(" ")[0]
+                command //.split(" ")[0]
         );
     }
 
-    private static void __var_set_impl(CommandSourceStack source, String var, double val, String command, String note, int clen) {
+    private static void __var_set_impl(CommandSourceStack source, String var, double val, String command, String note, int clen, boolean isInt) {
         String[] newCommand = command.split(" ");
         int cmd_st = -1;
         for (int i = 0; i < newCommand.length; ++i) {
@@ -366,18 +406,35 @@ public class BashCommand {
         newCommand = Arrays.copyOfRange(newCommand, cmd_st + clen, newCommand.length);
         for (int i = 0; i < newCommand.length; ++i) {
             if (newCommand[i].equals("$" + var)) {
-                newCommand[i] = Double.toString(val);
+                if (isInt) {
+                    newCommand[i] = Integer.toString((int) val);
+                } else {
+                    newCommand[i] = Double.toString(val);
+                }
             }
         }
         String cmd_buf = "bash " + String.join(" ", newCommand);
+        System.out.println(cmd_buf);
 
-        source.getServer().getCommands().performCommand(
-                source.getServer().getCommands().getDispatcher().parse(
-                        cmd_buf,
-                        source
-                ),
-                "bash"
-        );
+        __exec(source, cmd_buf);
+    }
+
+
+    public static List<CommandSourceStack> bash_delay(CommandSourceStack source, int delay, String command, String note, int clen) {
+        String[] newCommand = command.split(" ");
+        int cmd_st = -1;
+        for (int i = 0; i < newCommand.length; ++i) {
+            if (newCommand[i].equals(note)) {
+                cmd_st = i;
+                break;
+            }
+        }
+        newCommand = Arrays.copyOfRange(newCommand, cmd_st + clen, newCommand.length);
+
+        String cmd_buf = "bash " + String.join(" ", newCommand);
+        __exec(source, cmd_buf, delay);
+
+        return List.of(new CommandSourceStack[]{});
     }
 
     public static List<CommandSourceStack> bash_if(CommandSourceStack source, double val_a, double val_b, int op, boolean when) throws CommandSyntaxException {
@@ -407,10 +464,13 @@ public class BashCommand {
             case OPERATOR_POW -> Math.pow(val_a, val_b);
             case OPERATOR_LOG -> Math.log(val_b) / Math.log(val_a);
             case OPERATOR_SET -> val_a;
+            case OPERATOR_INT -> (int)val_a;
             default -> throw new IllegalStateException("Unexpected value: " + op);
         };
 
-        __var_set_impl(source, var, result, command, "let", op == OPERATOR_SET ? 5 : 6);
+        System.out.println(command);
+
+        __var_set_impl(source, var, result, command, "let", op == OPERATOR_SET ? 4 : (op == OPERATOR_INT ? 5 : 6), op == OPERATOR_INT);
 
         return List.of(new CommandSourceStack[]{});
     }
@@ -426,7 +486,7 @@ public class BashCommand {
             return list;
         } else {
             for (int i = (int) start; i <= stop; i += (int) step) {
-                __var_set_impl(source, var, i, command, "for", 7);
+                __var_set_impl(source, var, i, command, "for", 7, true);
             }
             return List.of(new CommandSourceStack[]{});
         }

@@ -1,6 +1,9 @@
 package net.blockmath.headbash;
 
+import net.blockmath.headbash.commands.BackCommand;
 import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
+import net.blockmath.headbash.commands.helpers.AttachmentTypes;
+import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.slf4j.Logger;
 
@@ -34,6 +37,7 @@ public class HeadBashCommands
     public HeadBashCommands(IEventBus modEventBus, ModContainer modContainer)
     {
         WeirdgeDoubleArgumentType.REGISTER.register(modEventBus);
+        AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -42,6 +46,8 @@ public class HeadBashCommands
         // Note that this is necessary if and only if we want *this* class (HeadBashCommands) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(ServerCommandScheduler.class);
+        NeoForge.EVENT_BUS.register(BackCommand.class);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

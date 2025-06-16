@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.blockmath.headbash.HeadBashCommands;
+import net.blockmath.headbash.commands.helpers.AttachmentTypes;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -12,10 +13,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class SetHomeCommand {
+    public static int requiredPermissionLevel = Commands.LEVEL_OWNERS;
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("sethome")
-                        .executes(context -> setHome(context.getSource()))
+                        .requires(commandSourceStack -> commandSourceStack.hasPermission(requiredPermissionLevel))
+                            .executes(context -> setHome(context.getSource()))
         );
     }
 
@@ -25,7 +29,7 @@ public class SetHomeCommand {
             BlockPos playerPos = BlockPos.containing(player.getPosition(0));
             String pos = "(" + playerPos.getX() + ", " + playerPos.getY() + ", " + playerPos.getZ() + ")";
 
-            player.getPersistentData().putIntArray(HeadBashCommands.MODID + "homepos", new int[]{playerPos.getX(), playerPos.getY(), playerPos.getZ()});
+            player.setData(AttachmentTypes.HOME_POS, new AttachmentTypes.AttBlockPos(playerPos.getX(), playerPos.getY(), playerPos.getZ()));
 
             source.sendSuccess(() -> Component.literal("Set home at " + pos), true);
 
