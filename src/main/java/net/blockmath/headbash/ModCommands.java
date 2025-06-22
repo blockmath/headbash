@@ -1,10 +1,7 @@
 package net.blockmath.headbash;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.blockmath.headbash.commands.BackCommand;
-import net.blockmath.headbash.commands.BashCommand;
-import net.blockmath.headbash.commands.HomeCommand;
-import net.blockmath.headbash.commands.SetHomeCommand;
+import net.blockmath.headbash.commands.*;
 import net.minecraft.commands.CommandSourceStack;
 
 public class ModCommands {
@@ -13,5 +10,6 @@ public class ModCommands {
         SetHomeCommand.register(dispatcher);
         BackCommand.register(dispatcher);
         BashCommand.register(dispatcher);
+        CopyPasteCommand.register(dispatcher);
     }
 }

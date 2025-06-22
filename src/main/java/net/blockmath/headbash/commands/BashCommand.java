@@ -8,22 +8,30 @@ import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
 import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 
 import java.util.*;
+
+import static net.blockmath.headbash.commands.helpers.CommandHelpers.perms;
 
 
 public class BashCommand {
     public static int requiredPermissionLevel = Commands.LEVEL_OWNERS;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(
+                Commands.literal("nop")
+                        .executes(context -> Command.SINGLE_SUCCESS)
+        );
+
         LiteralCommandNode<CommandSourceStack> literalCommandNode = dispatcher.register(
                 Commands.literal("bash")
-                        .requires(commandSourceStack -> commandSourceStack.hasPermission(requiredPermissionLevel))
+                        .requires(perms(requiredPermissionLevel))
         );
 
         dispatcher.register(
                 Commands.literal("bash")
-                        .requires(commandSourceStack -> commandSourceStack.hasPermission(requiredPermissionLevel))
+                        .requires(perms(requiredPermissionLevel))
                         .then(
                                 Commands.literal("run").then(
                                         Commands.argument("cmd", StringArgumentType.greedyString())
@@ -32,9 +40,24 @@ public class BashCommand {
                                                     return Command.SINGLE_SUCCESS;
                                                 })
                                 )
-                                        /*.redirect(
-                                                dispatcher.getRoot()
-                                        )*/
+                        )
+                        .then(
+                                Commands.literal("exec").then(
+                                        Commands.argument("cmd", StringArgumentType.string())
+                                                .fork(literalCommandNode, context -> bash_exec(
+                                                        context.getSource(),
+                                                        StringArgumentType.getString(context, "cmd")
+                                                ))
+                                )
+                        )
+                        .then(
+                                Commands.literal("echo").then(
+                                        Commands.argument("msg", StringArgumentType.string())
+                                                .fork(literalCommandNode, context -> bash_echo(
+                                                        context.getSource(),
+                                                        StringArgumentType.getString(context, "msg")
+                                                ))
+                                )
                         )
                         .then(
                                 Commands.literal("for").then(
@@ -406,7 +429,6 @@ public class BashCommand {
             }
         }
         String cmd_buf = "bash " + String.join(" ", newCommand);
-        System.out.println(cmd_buf);
 
         __exec(source, cmd_buf);
     }
@@ -427,6 +449,20 @@ public class BashCommand {
         __exec(source, cmd_buf, delay);
 
         return List.of(new CommandSourceStack[]{});
+    }
+
+
+    private static List<CommandSourceStack> bash_exec(CommandSourceStack source, String cmd) {
+
+        __exec(source, cmd);
+
+        return List.of(new CommandSourceStack[]{source});
+    }
+
+    private static List<CommandSourceStack> bash_echo(CommandSourceStack source, String message) {
+        source.sendSuccess(() -> Component.literal(message), true);
+
+        return List.of(new CommandSourceStack[]{source});
     }
 
     public static List<CommandSourceStack> bash_if(CommandSourceStack source, double val_a, double val_b, int op, boolean when) {

@@ -12,7 +12,6 @@ public class WeirdgeDoubleArgumentInfo implements ArgumentTypeInfo<WeirdgeDouble
     }
 
     public void serializeToNetwork(Template template, FriendlyByteBuf buffer) {
-        System.out.print("SERIALIZE:\t");
 
         boolean flag = template.min != -Double.MAX_VALUE;
         boolean flag1 = template.max != Double.MAX_VALUE;
@@ -29,18 +28,9 @@ public class WeirdgeDoubleArgumentInfo implements ArgumentTypeInfo<WeirdgeDouble
 
         buffer.getBytes(buffer.writerIndex() - 8, buf);
 
-        System.out.printf("%c %c  ", flag ? '1' : '-', flag1 ? '2' : '-');
-
-        for (byte b : buf) {
-            System.out.printf("%02X ", b);
-        }
-
-        System.out.println();
-
     }
 
     public @NotNull Template deserializeFromNetwork(FriendlyByteBuf buffer) {
-        System.out.print("DESERIALIZE:\t");
 
         byte b0 = buffer.readByte();
         double d0 = ArgumentUtils.numberHasMin(b0) ? buffer.readDouble() : -Double.MAX_VALUE;
@@ -49,14 +39,6 @@ public class WeirdgeDoubleArgumentInfo implements ArgumentTypeInfo<WeirdgeDouble
         byte[] buf = new byte[8];
 
         buffer.getBytes(buffer.writerIndex() - 8, buf);
-
-        System.out.printf("%c %c  ", ArgumentUtils.numberHasMin(b0) ? '1' : '-', ArgumentUtils.numberHasMax(b0) ? '2' : '-');
-
-        for (byte b : buf) {
-            System.out.printf("%02X ", b);
-        }
-
-        System.out.println();
 
         return new Template(d0, d1);
     }

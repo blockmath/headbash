@@ -10,13 +10,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
+import static net.blockmath.headbash.commands.helpers.CommandHelpers.perms;
+
 public class SetHomeCommand {
     public static int requiredPermissionLevel = Commands.LEVEL_OWNERS;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("sethome")
-                        .requires(commandSourceStack -> commandSourceStack.hasPermission(requiredPermissionLevel))
+                        .requires(perms(requiredPermissionLevel))
                             .executes(context -> setHome(context.getSource()))
         );
     }

@@ -5,9 +5,6 @@ import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
 import net.blockmath.headbash.commands.helpers.AttachmentTypes;
 import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import org.slf4j.Logger;
-
-import com.mojang.logging.LogUtils;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -29,8 +26,6 @@ public class HeadBashCommands
 {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "headbash";
-    // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.

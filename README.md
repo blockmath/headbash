@@ -12,7 +12,7 @@ doesn't natively allow players to bypass permission restrictions like `/execute`
 
 Formatted similar to `/execute`, with the following options:
 
-`let <var> eq <value>` - Replace all future occurences of `$<var>` with `<value>`. Only supports numeric types.
+`let <var> eq <value>` - Replace all future occurrences of `$<var>` with `<value>`. Only supports numeric types.
 
 `let <var> eq (add|sub|mul|div|pow|log) <val_a> <val_b>` - Same as above, but performs the specified calculation
 and assigns the result to `$<var>`.
