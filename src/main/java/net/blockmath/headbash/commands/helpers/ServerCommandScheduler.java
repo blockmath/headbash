@@ -24,7 +24,6 @@ public class ServerCommandScheduler {
         private boolean ticking = false;
 
         public void schedule(Runnable task, int delayTicks) {
-            //System.out.println("Scheduling task for " + delayTicks + " ticks");
             if (delayTicks <= 0) {
                 task.run();
                 return;

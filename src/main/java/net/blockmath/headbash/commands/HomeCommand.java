@@ -2,9 +2,10 @@ package net.blockmath.headbash.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.blockmath.headbash.Config;
+import net.blockmath.headbash.ModConfig;
 import net.blockmath.headbash.commands.helpers.AttachmentTypes;
 import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
+import net.minecraft.SharedConstants;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -33,9 +34,9 @@ public class HomeCommand {
 
             if (homePos.isValid()) {
                 BlockPos playerPos = BlockPos.containing(player.getPosition(0));
-                source.sendSuccess(() -> Component.literal("Teleporting in " + Config.teleportDelayTime + " seconds. Don't move!"), true);
+                source.sendSuccess(() -> Component.literal("Teleporting in " + (int) Math.ceil(ModConfig.teleportDelayTime) + " seconds. Don't move!"), true);
 
-                ServerCommandScheduler.get(source.getServer()).schedule(() -> doTeleport(source, playerPos, homePos), (int) (Config.teleportDelayTime * source.getServer().tickRateManager().tickrate()));
+                ServerCommandScheduler.get(source.getServer()).schedule(() -> doTeleport(source, playerPos, homePos), (int) (ModConfig.teleportDelayTime * SharedConstants.TICKS_PER_SECOND));
 
                 return Command.SINGLE_SUCCESS;
             } else {
@@ -56,7 +57,7 @@ public class HomeCommand {
         if (source.getEntity() instanceof ServerPlayer player) {
             BlockPos playerPos = BlockPos.containing(player.getPosition(0));
 
-            if (blockDistance(from, playerPos) <= Config.maxTeleportDelayDistance) {
+            if (blockDistance(from, playerPos) <= ModConfig.maxTeleportDelayDistance) {
                 source.sendSuccess(() -> Component.literal("Teleporting..."), true);
 
                 player.setData(AttachmentTypes.BACK_POS, new AttachmentTypes.AttBlockPos(playerPos.getX(), playerPos.getY(), playerPos.getZ()));

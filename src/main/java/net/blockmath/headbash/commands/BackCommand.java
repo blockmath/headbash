@@ -2,9 +2,10 @@ package net.blockmath.headbash.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.blockmath.headbash.Config;
+import net.blockmath.headbash.ModConfig;
 import net.blockmath.headbash.commands.helpers.AttachmentTypes;
 import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
+import net.minecraft.SharedConstants;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -36,9 +37,9 @@ public class BackCommand {
 
             if (backPos.isValid()) {
                 BlockPos playerPos = BlockPos.containing(player.getPosition(0));
-                source.sendSuccess(() -> Component.literal("Teleporting in " + Config.teleportDelayTime + " seconds. Don't move!"), true);
+                source.sendSuccess(() -> Component.literal("Teleporting in " + (int) Math.ceil(ModConfig.teleportDelayTime) + " seconds. Don't move!"), true);
 
-                ServerCommandScheduler.get(source.getServer()).schedule(() -> HomeCommand.doTeleport(source, playerPos, backPos), (int) (Config.teleportDelayTime * source.getServer().tickRateManager().tickrate()));
+                ServerCommandScheduler.get(source.getServer()).schedule(() -> HomeCommand.doTeleport(source, playerPos, backPos), (int) (ModConfig.teleportDelayTime * SharedConstants.TICKS_PER_SECOND));
 
                 return Command.SINGLE_SUCCESS;
             } else {

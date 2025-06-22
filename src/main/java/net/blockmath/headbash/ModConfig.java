@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
 // Demonstrates how to use Neo's config APIs
 @EventBusSubscriber(modid = HeadBashCommands.MODID, bus = EventBusSubscriber.Bus.MOD)
-public class Config {
+public class ModConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     private static final ModConfigSpec.BooleanValue ENABLE_TELEPORTATION_COMMANDS = BUILDER
@@ -43,8 +43,8 @@ public class Config {
             .defineInRange("command_permission_bash", Commands.LEVEL_ALL, Commands.LEVEL_ALL, Commands.LEVEL_OWNERS);
 
     private static final ModConfigSpec.IntValue COPYPASTE_PERMISSION_LEVEL = BUILDER
-            .comment("Permission level required to use /copy and /paste")
-            .defineInRange("command_permission_copypaste", Commands.LEVEL_MODERATORS, Commands.LEVEL_ALL, Commands.LEVEL_OWNERS);
+            .comment("Permission level required to use /save and /load")
+            .defineInRange("command_permission_saveload", Commands.LEVEL_MODERATORS, Commands.LEVEL_ALL, Commands.LEVEL_OWNERS);
 
     static final ModConfigSpec SPEC = BUILDER.build();
 
@@ -53,8 +53,7 @@ public class Config {
     public static double teleportDelayTime = 5.0;
 
     @SubscribeEvent
-    static void onLoad(final ModConfigEvent event)
-    {
+    static void onLoad(final ModConfigEvent event) {
 
         CopyPasteCommand.requiredPermissionLevel = COPYPASTE_PERMISSION_LEVEL.get();
         BashCommand.requiredPermissionLevel = BASH_PERMISSION_LEVEL.get();
