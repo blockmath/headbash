@@ -1,6 +1,5 @@
 package net.blockmath.headbash;
 
-import net.blockmath.headbash.commands.BackCommand;
 import net.blockmath.headbash.commands.arguments.WeirdgeDoubleArgumentType;
 import net.blockmath.headbash.commands.helpers.AttachmentTypes;
 import net.blockmath.headbash.commands.helpers.ServerCommandScheduler;
@@ -41,7 +40,6 @@ public class HeadBashCommands
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(ServerCommandScheduler.class);
-        NeoForge.EVENT_BUS.register(BackCommand.class);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

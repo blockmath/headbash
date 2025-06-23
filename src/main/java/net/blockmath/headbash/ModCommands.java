@@ -6,9 +6,6 @@ import net.minecraft.commands.CommandSourceStack;
 
 public class ModCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        HomeCommand.register(dispatcher);
-        SetHomeCommand.register(dispatcher);
-        BackCommand.register(dispatcher);
         BashCommand.register(dispatcher);
         CopyPasteCommand.register(dispatcher);
     }

@@ -2,6 +2,7 @@ package net.blockmath.headbash.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
@@ -90,11 +91,20 @@ public class CopyPasteCommand {
                         .requires(perms(requiredPermissionLevel))
                         .then(
                                 Commands.argument("path", StringArgumentType.string()).then(
-                                        Commands.argument("pos", BlockPosArgument.blockPos())
+                                        Commands.argument("pos", BlockPosArgument.blockPos()).then(
+                                                        Commands.argument("integrity", FloatArgumentType.floatArg(0.0f, 1.0f))
+                                                                .executes(context -> struct_load(
+                                                                        context.getSource(),
+                                                                        BlockPosArgument.getBlockPos(context, "pos"),
+                                                                        StringArgumentType.getString(context, "path"),
+                                                                        FloatArgumentType.getFloat(context, "integrity")
+                                                                ))
+                                                )
                                                 .executes(context -> struct_load(
                                                         context.getSource(),
                                                         BlockPosArgument.getBlockPos(context, "pos"),
-                                                        StringArgumentType.getString(context, "path")
+                                                        StringArgumentType.getString(context, "path"),
+                                                        1.0f
                                                 ))
                                 )
                         )
@@ -125,10 +135,11 @@ public class CopyPasteCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    public static int struct_load(CommandSourceStack source, BlockPos pos, String path) {
+    public static int struct_load(CommandSourceStack source, BlockPos pos, String path, float integrity) {
         WeirdgeStructureBlockEntity sbe = new WeirdgeStructureBlockEntity(pos, StructureBlock.stateById(0));
         sbe.setMode(StructureMode.LOAD);
         sbe.setStructureName(path);
+        sbe.setIntegrity(integrity);
         sbe.setLevel(source.getUnsidedLevel());
         if (!sbe.loadStructureInfo(source.getLevel())) {
             source.sendFailure(Component.literal("Unable to load structure '" + path + "'"));
@@ -651,6 +662,8 @@ public class CopyPasteCommand {
         public StructureMode getMode() {
             return this.mode;
         }
+
+        public void setIntegrity(float integrity) { this.integrity = integrity; }
 
         public void setMode(StructureMode mode) {
             this.mode = mode;

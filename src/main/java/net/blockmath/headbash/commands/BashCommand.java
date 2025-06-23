@@ -57,6 +57,14 @@ public class BashCommand {
                                                         context.getSource(),
                                                         StringArgumentType.getString(context, "msg")
                                                 ))
+                                ).then(
+                                        Commands.literal("var").then(
+                                                Commands.argument("msg", WeirdgeDoubleArgumentType.doubleArg())
+                                                        .fork(literalCommandNode, context -> bash_echo(
+                                                                context.getSource(),
+                                                                "" + WeirdgeDoubleArgumentType.getDouble(context, "msg")
+                                                        ))
+                                        )
                                 )
                         )
                         .then(
