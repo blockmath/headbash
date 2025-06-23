@@ -4,7 +4,7 @@
 ### (So named because I had to bash my head on my computer to get some of this stuff to work.)
 
 HeadBash Commands is a small mod that adds a few simple command utilities. In addition to basic commands such as
-`/sethome`, the main feature of this mod is the `/bash` command, which allows you to do limited in-command scripting
+`/save` and `/load`, the main feature of this mod is the `/bash` command, which allows you to do limited in-command scripting
 in a format similar to `/execute`. The permission level of each command is configurable, and the `/bash` command
 doesn't natively allow players to bypass permission restrictions like `/execute` would.
 
@@ -31,3 +31,15 @@ comparison condition is true. Otherwise, the branch stops.
 `run <cmd>` - Runs another command. Works similarly to `/execute`'s `run` option, but doesn't support autocomplete
 to allow for lazy numeric parsing (waiting for previous options to be processed before parsing the command),
 rather than having the command fail with errors like "`$i` is not a double".
+
+## `/save`
+
+Format: `/save <path> <pos1> <pos2> [noentities]`
+
+Saves the area as a structure block would to `<path>.nbt`.
+
+## `/load`
+
+Format: `/load <path> <pos>`
+
+Loads the specified structure (from `<path>.nbt`) at `<pos>`.
